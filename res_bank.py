@@ -43,10 +43,12 @@ class res_partner_bank(osv.osv):
         'ach_default': fields.boolean('Default ACH account', help="Have this account automatically selected for ACH payments?"),
         'ach_bank_name': fields.char('ACH Name', size=23, help="Name to use for ACH transactions"),
         'ach_bank_routing': fields.char('ACH Routing Number', size=8, help="Routing number to use for ACH transactions"),
+        'verified': fields.selection([('Not Verified','unverified'), ('Testing','testing'), ('Verified','verified')], 'ACH Status'),
     }
 
     _defaults = {
         'ach_default': lambda obj, cursor, user, context: False,
+        'verified': lambda obj, cursor, user, context: 'unverified'
     }
 
     @staticmethod
@@ -81,6 +83,12 @@ class res_partner_bank(osv.osv):
         for rec in records:
             super(res_partner_bank, self).write(cr, uid, rec.id, {'ach_default':False}, context=context)
 
+    def _check_verification(self, cr, uid, ids=None, values=None, context=None):
+        if ids is None:
+            return
+        if 
+
+
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         result = {}
         if bank_id:
@@ -97,6 +105,7 @@ class res_partner_bank(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if ids:
             self._unset_default_ach(cr, uid, ids, values, context=context)
+            self._check_verification(cr, uid, ids, values, context=context)
         return super(res_partner_bank, self).write(cr, uid, ids, values, context=context)
 
 res_partner_bank()
