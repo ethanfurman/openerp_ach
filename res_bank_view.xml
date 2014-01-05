@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- res.bank = Banks -->
+        <record model="ir.ui.view" id="view_res_bank_form_ACH">
+            <field name="name">res.bank.form.ach</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet" position="inside">
+                    <group string="Automated Clearing House" colspan="2" col="4">
+                        <field name="ach_name"/>
+                        <separator colspan="2"/>
+                        <field name="ach_routing"/>
+                        <separator colspan="2"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- res.partner.bank = Bank Accounts -->
+        <record model="ir.ui.view" id="view_partner_bank_form_ach">
+            <field name="name">res.partner.bank.form_ach</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="footer" position="before">
+                    <field name="ach_default" attrs="{'invisible': [('state','!=','ach')]}"/>
+                </field>
+                <field name="bank_bic" position="after">
+                    <field name="ach_bank_routing" attrs="{'invisible': [('state','!=','ach')]}"/>
+                    <field name="ach_bank_name" attrs="{'invisible': [('state','!=','ach')]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+

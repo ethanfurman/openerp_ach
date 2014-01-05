@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="True">
+    
+        <!-- ACH Bank account type -->
+        <record model="res.partner.bank.type" id="bank_ach">
+            <field name="name">ACH Bank Account</field>
+            <field name="code">ach</field>
+        </record>
+
+        <record model="res.partner.bank.type.field" id="bank_ach_field_bank_name">
+            <field name="name">bank_name</field>
+            <field name="bank_type_id" ref="bank_ach"/>
+            <field name="required" eval="1"/>
+        </record>
+
+        <record model="res.partner.bank.type.field" id="bank_ach_field_bank_bic">
+            <field name="name">bank_bic</field>
+            <field name="bank_type_id" ref="bank_ach"/>
+            <field name="required" eval="1"/>
+        </record>
+
+        <record model="res.partner.bank.type.field" id="bank_ach_field_ach_bank_routing">
+            <field name="name">ach_bank_routing</field>
+            <field name="bank_type_id" ref="bank_ach"/>
+            <field name="required" eval="1"/>
+        </record>
+
+        <record model="res.partner.bank.type.field" id="bank_ach_field_ach_bank_name">
+            <field name="name">ach_bank_name</field>
+            <field name="bank_type_id" ref="bank_ach"/>
+            <field name="required" eval="1"/>
+        </record>
+
+    </data>
+</openerp>
+
