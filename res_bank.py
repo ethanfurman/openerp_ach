@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from fnx.finance import ACHPayment
 
 class Bank(osv.osv):
     """Banks"""
@@ -33,6 +34,14 @@ class Bank(osv.osv):
         'ach_company_name': fields.char('ACH Company Name', size=23, help="Company name to use for ACH transactions"),
         'ach_company_number': fields.char('ACH Company Number', size=8, help="Company number to use for this company at this bank"),
     }
+
+    def write(self, cr, uid, ids, values, context=None):
+        if 'ach_routing' in values and values['ach_routing']:
+            try:
+                ACHPayment.validate_routing(values['ach_routing'])
+            except ValueError:
+                raise osv.except_osv(_('Error'), _('Invalid routing number'))
+        return super(Bank, self).write(cr, uid, ids, values, context=context)
 Bank()
 
 
@@ -48,12 +57,10 @@ class res_partner_bank(osv.osv):
         'ach_bank_company_name': fields.char('ACH Company Name', size=23, help="Company name to use for ACH transactions"),
         'ach_bank_company_number': fields.char('ACH Company Number', size=8, help="Company number to use for this company at this bank"),
         'ach_file_number': fields.char('ACH File ID', size=8, help="File ID to use for this company at this bank"),
-        'verified': fields.selection([('Not Verified','unverified'), ('Testing','testing'), ('Verified','verified')], 'ACH Status'),
     }
 
     _defaults = {
         'ach_default': lambda obj, cursor, user, context: False,
-        'verified': lambda obj, cursor, user, context: 'unverified',
     }
 
     @staticmethod
@@ -68,21 +75,12 @@ class res_partner_bank(osv.osv):
         if bank_id is None or len(bank_id) > 8:
             raise osv.except_osv('Invalid Data', 'The Bank Indentifier Code for ACH accounts must be no more that 8 digits long\n%r' % bank_id)
 
-    def _check_verification(self, cr, uid, ids=None, values=None, context=None):
-        pass
-
     def _unset_default_ach(self, cr, uid, ids=None, values=None, context=None):
         if ids is None:
             ids = [0]
-        if len(ids) == 1:
-            new_values = {}
-            new_values[ids[0]] = values
-        else:
-            new_values = values
         ach_candidate_count = 0
-        for id, values in new_values.items():
-            if values.get('ach_default'):
-                ach_candidate_count += 1
+        if values.get('ach_default'):
+            ach_candidate_count = len(ids)
         if not ach_candidate_count:
             return
         elif ach_candidate_count > 1:
@@ -109,7 +107,6 @@ class res_partner_bank(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if ids:
             self._unset_default_ach(cr, uid, ids, values, context=context)
-            self._check_verification(cr, uid, ids, values, context=context)
         return super(res_partner_bank, self).write(cr, uid, ids, values, context=context)
 
 res_partner_bank()
