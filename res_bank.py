@@ -30,6 +30,8 @@ class Bank(osv.osv):
     _columns = {
         'ach_name': fields.char('ACH Name', size=23, help="Name to use for ACH transactions"),
         'ach_routing': fields.char('ACH Routing Number', size=8, help="Routing number to use for ACH transactions"),
+        'ach_company_name': fields.char('ACH Company Name', size=23, help="Company name to use for ACH transactions"),
+        'ach_company_number': fields.char('ACH Company Number', size=8, help="Company number to use for this company at this bank"),
     }
 Bank()
 
@@ -43,12 +45,15 @@ class res_partner_bank(osv.osv):
         'ach_default': fields.boolean('Default ACH account', help="Have this account automatically selected for ACH payments?"),
         'ach_bank_name': fields.char('ACH Name', size=23, help="Name to use for ACH transactions"),
         'ach_bank_routing': fields.char('ACH Routing Number', size=8, help="Routing number to use for ACH transactions"),
+        'ach_bank_company_name': fields.char('ACH Company Name', size=23, help="Company name to use for ACH transactions"),
+        'ach_bank_company_number': fields.char('ACH Company Number', size=8, help="Company number to use for this company at this bank"),
+        'ach_file_number': fields.char('ACH File ID', size=8, help="File ID to use for this company at this bank"),
         'verified': fields.selection([('Not Verified','unverified'), ('Testing','testing'), ('Verified','verified')], 'ACH Status'),
     }
 
     _defaults = {
         'ach_default': lambda obj, cursor, user, context: False,
-        'verified': lambda obj, cursor, user, context: 'unverified'
+        'verified': lambda obj, cursor, user, context: 'unverified',
     }
 
     @staticmethod
@@ -62,6 +67,9 @@ class res_partner_bank(osv.osv):
         bank_id = proposed.get('bank_bic')
         if bank_id is None or len(bank_id) > 8:
             raise osv.except_osv('Invalid Data', 'The Bank Indentifier Code for ACH accounts must be no more that 8 digits long\n%r' % bank_id)
+
+    def _check_verification(self, cr, uid, ids=None, values=None, context=None):
+        pass
 
     def _unset_default_ach(self, cr, uid, ids=None, values=None, context=None):
         if ids is None:
@@ -83,12 +91,6 @@ class res_partner_bank(osv.osv):
         for rec in records:
             super(res_partner_bank, self).write(cr, uid, rec.id, {'ach_default':False}, context=context)
 
-    def _check_verification(self, cr, uid, ids=None, values=None, context=None):
-        if ids is None:
-            return
-        if 
-
-
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         result = {}
         if bank_id:
@@ -96,6 +98,8 @@ class res_partner_bank(osv.osv):
             bank = self.pool.get('res.bank').browse(cr, uid, bank_id, context=context)
             result['value']['ach_bank_name'] = bank.ach_name
             result['value']['ach_bank_routing'] = bank.ach_routing
+            result['value']['ach_bank_company_name'] = bank.ach_company_name
+            result['value']['ach_bank_company_number'] = bank.ach_company_number
         return result
 
     def create(self, cr, uid, values, context=None):

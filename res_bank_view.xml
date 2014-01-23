@@ -9,11 +9,11 @@
             <field name="inherit_id" ref="base.view_res_bank_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet" position="inside">
-                    <group string="Automated Clearing House" colspan="2" col="4">
+                    <group string="Automated Clearing House" colspan="2" col="4" groups="account.group_account_manager">
                         <field name="ach_name"/>
-                        <separator colspan="2"/>
+                        <field name="ach_company_name" />
                         <field name="ach_routing"/>
-                        <separator colspan="2"/>
+                        <field name="ach_company_number" />
                     </group>
                 </xpath>
             </field>
@@ -27,10 +27,6 @@
             <field name="arch" type="xml">
                 <field name="footer" position="before">
                     <field name="ach_default" attrs="{'invisible': [('state','!=','ach')]}"/>
-                </field>
-                <field name="bank_bic" position="after">
-                    <field name="ach_bank_routing" attrs="{'invisible': [('state','!=','ach')]}"/>
-                    <field name="ach_bank_name" attrs="{'invisible': [('state','!=','ach')]}"/>
                 </field>
             </field>
         </record>

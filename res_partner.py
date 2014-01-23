@@ -17,6 +17,7 @@ class res_partner(osv.Model):
         if to_test or passed:
             ach_file = self._get_next_ach_file()
 
+
     def _validate_ach(self, values, record=None):
         if record is None:
             existing = {}

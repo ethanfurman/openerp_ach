@@ -9,7 +9,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <page string="Internal Notes" position="after">
-                        <page string="ACH">
+                        <page string="ACH" groups="account.group_account_manager">
                             <group>
                                 <group>
                                     <field name="ach_type" widget="select" colspan="2"/>
