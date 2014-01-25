@@ -1,4 +1,5 @@
-from fnx import all_equal, ACHPayment, ACHStore
+from fnx import all_equal
+from fnx.finance import ACHPayment
 from openerp.osv import fields, osv
 
 class res_partner(osv.Model):
@@ -16,7 +17,6 @@ class res_partner(osv.Model):
         passed = self.browse(cr, uid, self.search(cr, uid, [('ach_verified','=','verified'),('ach_amount','!=',0)]))
         if to_test or passed:
             ach_file = self._get_next_ach_file()
-
 
     def _validate_ach(self, values, record=None):
         if record is None:

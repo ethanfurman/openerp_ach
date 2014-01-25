@@ -2,23 +2,6 @@
 <openerp>
     <data>
 
-        <!-- res.bank = Banks -->
-        <record model="ir.ui.view" id="view_res_bank_form_ACH">
-            <field name="name">res.bank.form.ach</field>
-            <field name="model">res.bank</field>
-            <field name="inherit_id" ref="base.view_res_bank_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/sheet" position="inside">
-                    <group string="Automated Clearing House" colspan="2" col="4" groups="account.group_account_manager">
-                        <field name="ach_name"/>
-                        <field name="ach_company_name" />
-                        <field name="ach_routing"/>
-                        <field name="ach_company_number" />
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <!-- res.partner.bank = Bank Accounts -->
         <record model="ir.ui.view" id="view_partner_bank_form_ach">
             <field name="name">res.partner.bank.form_ach</field>
@@ -28,6 +11,21 @@
                 <field name="footer" position="before">
                     <field name="ach_default" attrs="{'invisible': [('state','!=','ach')]}"/>
                 </field>
+                <field name="bank_bic" position="after">
+                    <group attrs="{'invisible': [('state','!=','ach')]}" groups="account.group_account_manager">
+                        <field name="ach_bank_name"/>
+                        <field name="ach_bank_number"/>
+                        <field name="ach_bank_id"/>
+                    </group>
+                </field>
+                <xpath expr="//group[@name='bank']" position="after">
+                    <group name="company_ach" string="Company ACH Information" attrs="{'invisible': [('state','!=','ach')]}" groups="account.group_account_manager">
+                        <field name="ach_company_name"/>
+                        <field name="ach_company_number"/>
+                        <field name="ach_company_name_short"/>
+                        <field name="ach_company_id"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
