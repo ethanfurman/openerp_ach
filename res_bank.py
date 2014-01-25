@@ -21,18 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-
-class Bank(osv.osv):
-    """Banks"""
-    _name = 'res.bank'
-    _inherit = 'res.bank'
-
-    _columns = {
-        'ach_name': fields.char('ACH Name', size=23, help="Name to use for ACH transactions"),
-        'ach_routing': fields.char('ACH Routing Number', size=8, help="Routing number to use for ACH transactions"),
-    }
-Bank()
-
+from fnx.finance import ACHPayment
 
 class res_partner_bank(osv.osv):
     """Bank Accounts"""
@@ -41,38 +30,27 @@ class res_partner_bank(osv.osv):
 
     _columns = {
         'ach_default': fields.boolean('Default ACH account', help="Have this account automatically selected for ACH payments?"),
-        'ach_bank_name': fields.char('ACH Name', size=23, help="Name to use for ACH transactions"),
-        'ach_bank_routing': fields.char('ACH Routing Number', size=8, help="Routing number to use for ACH transactions"),
+
+        'ach_bank_name': fields.char('Name', size=23, help="Immediate Destination Name [23]"),
+        'ach_bank_number': fields.char('Number', size=8, help="Immediate Destination [9]"),
+        'ach_bank_id': fields.char('ID', size=8, help="Originating DFI [8]"),
+
+        'ach_company_name': fields.char('Name', size=23, help="Immediate Origin Name [23]"),
+        'ach_company_number': fields.char('Number', size=10, help="Immediate Origin [10]"),
+        'ach_company_name_short': fields.char('Name (short)', size=16, help="Company Name [16]"),
+        'ach_company_id': fields.char('ID', size=10, help="Company ID [10]"),
     }
 
     _defaults = {
         'ach_default': lambda obj, cursor, user, context: False,
     }
 
-    @staticmethod
-    def _check_bank_id(values, record=None):
-        proposed = {}
-        if record:
-            proposed.update(record)
-        proposed.update(values)
-        if proposed.get('state') != 'ach':
-            return
-        bank_id = proposed.get('bank_bic')
-        if bank_id is None or len(bank_id) > 8:
-            raise osv.except_osv('Invalid Data', 'The Bank Indentifier Code for ACH accounts must be no more that 8 digits long\n%r' % bank_id)
-
     def _unset_default_ach(self, cr, uid, ids=None, values=None, context=None):
         if ids is None:
             ids = [0]
-        if len(ids) == 1:
-            new_values = {}
-            new_values[ids[0]] = values
-        else:
-            new_values = values
         ach_candidate_count = 0
-        for id, values in new_values.items():
-            if values.get('ach_default'):
-                ach_candidate_count += 1
+        if values.get('ach_default'):
+            ach_candidate_count = len(ids)
         if not ach_candidate_count:
             return
         elif ach_candidate_count > 1:
@@ -81,17 +59,8 @@ class res_partner_bank(osv.osv):
         for rec in records:
             super(res_partner_bank, self).write(cr, uid, rec.id, {'ach_default':False}, context=context)
 
-    def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
-        result = {}
-        if bank_id:
-            result = super(res_partner_bank, self).onchange_bank_id(cr, uid, ids, bank_id, context=context)
-            bank = self.pool.get('res.bank').browse(cr, uid, bank_id, context=context)
-            result['value']['ach_bank_name'] = bank.ach_name
-            result['value']['ach_bank_routing'] = bank.ach_routing
-        return result
-
     def create(self, cr, uid, values, context=None):
-        self._check_bank_id(values)
+        self._unset_default_ach(cr, uid, ids, values, context=context)
         return super(res_partner_bank, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
