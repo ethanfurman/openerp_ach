@@ -12,10 +12,21 @@
                         <page string="ACH" groups="account.group_account_manager">
                             <group>
                                 <group>
-                                    <field name="ach_type" widget="select" colspan="2"/>
-                                    <separator colspan="4"/>
-                                    <field name="ach_routing"/>
-                                    <field name="ach_account"/>
+                                    <field name="ach_type" widget="select"/>
+                                    <separator colspan="2"/>
+                                    <label for="ach_routing" string="Routing #"/>
+                                    <field name="ach_routing" nolabel="1"/>
+                                    <label for="ach_account" string="Account #"/>
+                                    <field name="ach_account" nolabel="1"/>
+                                </group>
+                                <group>
+                                    <label for="ach_verified" string="Status"/>
+                                    <field name="ach_verified" widget="select" nolabel="1"/>
+                                    <separator colspan="2"/>
+                                    <label for="ach_date" string="Last Transaction Date"/>
+                                    <field name="ach_date" nolabel="1" attrs="{'readonly':True}"/>
+                                    <label for="ach_amount" string="Last Transaction Amount"/>
+                                    <field name="ach_amount" nolabel="1" attrs="{'readonly':True}"/>
                                 </group>
                             </group>
                         </page>
