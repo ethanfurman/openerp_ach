@@ -1,4 +1,4 @@
-from fnx import all_equal
+from fnx import all_equal, PropertyDict
 from fnx.finance import ACHPayment
 from openerp.osv import fields, osv
 
