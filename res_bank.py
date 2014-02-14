@@ -32,7 +32,7 @@ class res_partner_bank(osv.osv):
         'ach_default': fields.boolean('Default ACH account', help="Have this account automatically selected for ACH payments?"),
 
         'ach_bank_name': fields.char('Name', size=23, help="Immediate Destination Name [23]"),
-        'ach_bank_number': fields.char('Number', size=8, help="Immediate Destination [9]"),
+        'ach_bank_number': fields.char('Number', size=9, help="Immediate Destination [9]"),
         'ach_bank_id': fields.char('ID', size=8, help="Originating DFI [8]"),
 
         'ach_company_name': fields.char('Name', size=23, help="Immediate Origin Name [23]"),
