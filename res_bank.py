@@ -60,7 +60,7 @@ class res_partner_bank(osv.osv):
             super(res_partner_bank, self).write(cr, uid, rec.id, {'ach_default':False}, context=context)
 
     def create(self, cr, uid, values, context=None):
-        self._unset_default_ach(cr, uid, ids, values, context=context)
+        self._unset_default_ach(cr, uid, values=values, context=context)
         return super(res_partner_bank, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
