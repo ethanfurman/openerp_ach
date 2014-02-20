@@ -8,7 +8,7 @@ class res_partner(osv.Model):
         'ach_type': fields.selection([('domestic', 'Domestic'), ('foreign', 'Foreign')], "Type of account"),
         'ach_routing': fields.char('ACH Routing #', size=9, help="Partner's bank's routing number"),
         'ach_account': fields.char('ACH Account #', size=32, help="Partner's account at bank."),
-        'ach_verified': fields.selection([('unverified','Not Verified'), ('testing','Testing'), ('verified','Verified')], 'ACH Status'),
+        'ach_verified': fields.selection([('unverified','Not Verified'), ('testing','Testing'), ('verified','Verified'), ('inactive','Verified (inactive)')], 'ACH Status'),
         'ach_amount': fields.integer('Ach Amount'),
         'ach_date': fields.date('Last Transaction'),
         }
