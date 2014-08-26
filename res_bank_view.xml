@@ -12,13 +12,13 @@
                     <field name="ach_default" attrs="{'invisible': [('state','!=','ach')]}"/>
                 </field>
                 <xpath expr="//group[@name='bank']" position="after">
-                    <group name="company_ach" string="Company ACH Information" attrs="{'invisible': [('state','!=','ach')]}" groups="account.group_account_manager">
+                    <group name="company_ach" string="Company ACH Information" attrs="{'invisible': [('state','!=','ach')]}" groups="automated_clearing_house.setup">
                         <field name="ach_company_name"/>
                         <field name="ach_company_number"/>
                         <field name="ach_company_name_short"/>
                         <field name="ach_company_id"/>
                     </group>
-                    <group name="bank_ach" string="Bank ACH Information" attrs="{'invisible': [('state','!=','ach')]}" groups="account.group_account_manager">
+                    <group name="bank_ach" string="Bank ACH Information" attrs="{'invisible': [('state','!=','ach')]}" groups="automated_clearing_house.setup">
                         <field name="ach_bank_name"/>
                         <field name="ach_bank_number"/>
                         <field name="ach_bank_id"/>

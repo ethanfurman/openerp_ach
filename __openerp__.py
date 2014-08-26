@@ -37,6 +37,7 @@ added to res.partner, and an ACH Bank Account Type is made available.
         'ach_data.xml',
         'res_bank_view.xml',
         'res_partner_view.xml',
+        'security/ach_security.xml',
     ],
     'demo_xml': [],
     'installable': True,

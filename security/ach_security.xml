@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+
+    <data noupdate="0">
+
+        <record model="ir.module.category" id="automated_clearing_house">
+            <field name="name">Automated Clearing House</field>
+            <field name="sequence">21</field>
+            <field name="description">Send ACH financial transactions within USA</field>
+        </record>
+
+        <record model="res.groups" id="configure">
+            <field name="name">Configure Partner Info</field>
+            <field name="category_id" ref="automated_clearing_house"/>
+            <field name="comment">The user is able to configure ACH bank account and routing information.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record model="res.groups" id="setup">
+            <field name="name">Configure Own Info</field>
+            <field name="category_id" ref="automated_clearing_house"/>
+            <field name="comment">The user can approve configured information.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record model="res.groups" id="approve">
+            <field name="name">Approve Partner Info</field>
+            <field name="category_id" ref="automated_clearing_house"/>
+            <field name="comment">The user can approve configured information.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+
+</openerp>
+
