@@ -55,7 +55,7 @@ class ach(object):
                 values['ach_verified'] = False
                 values['ach_amount'] = False
                 values['ach_date'] = Date.today()
-                mail_subject = 'ACH data removed from %s' % entity_name
+                mail_subject = 'ACH data removed from: %s' % entity_name
             elif action == 'set':
                 if proposed.get('ach_type') == 'foreign':
                     raise ERPError('Not Implemented', 'Foreign ACH is not yet implemented.')
@@ -69,10 +69,11 @@ class ach(object):
                     values['ach_verified'] = 'unverified'
                     values['ach_amount'] = 0
                     values['ach_date'] = Date.today()
-                    mail_subject = 'ACH data changed for %s' % entity_name
+                    mail_subject = 'ACH data changed for: %s' % entity_name
                 elif 'ach_verified' in values:
                     # verification status changing
-                    mail_subject = 'ACH status changed for %s' % entity_name
+                    values['ach_date'] = Date.today()
+                    mail_subject = 'ACH status changed for: %s' % entity_name
             if mail_subject is not None:
                 mail_headers = '\n'.join(mail_headers) + '\nSubject: ' + mail_subject + '\n\n'
                 mail_body = 'name: %(name)s\nby:   %(user)s\nat:   %(date)s\nfrom: %(ip)s'
