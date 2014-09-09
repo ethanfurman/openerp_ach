@@ -1,4 +1,4 @@
-from fnx import Date, PropertyDict, all_equal, finance, mail
+from fnx import Date, DateTime, PropertyDict, all_equal, finance, mail
 from osv.osv import except_osv as ERPError
 from openerp import SUPERUSER_ID as SUPERUSER
 import logging
@@ -12,7 +12,9 @@ class ach(object):
 
     def create(self, cr, uid, values, context=None):
         new_id = super(ach, self).create(cr, uid, values, context=context)
-        self.validate_ach(cr, uid, [new_id], values, context=context)
+        ctx = context.copy()
+        ctx['ach'] = 'create'
+        self.validate_ach(cr, uid, [new_id], values, context=ctx)
         return new_id
 
     def validate_ach(self, cr, uid, ids, values, context=None):
@@ -24,10 +26,13 @@ class ach(object):
         # get info needed for email
         # - mail server to use from ir.mail_server, lowest numbered 'sequence'
         # - users to mail: all users with the appropriate 'configure' or 'approve' permissions
-        mail_server = min(self.pool.get('ir.mail_servers').browse(cr, SUPERUSER), key=lambda ms: ms.sequence)
-        mail_headers = ['From: OpenERP <noreply@%s' % mail_server.smtp_host]
-        for user in self.ach_users():
-            mail_headers.append('To: %s <%s>' % (user.name, user.email))
+        mail_server = min(self.pool.get('ir.mail_server').browse(cr, SUPERUSER), key=lambda ms: ms.sequence)
+        mail_headers = ['From: OpenERP <noreply@%s>' % mail_server.smtp_host]
+        for user in self.ach_users(cr, uid, context=context):
+            if user.email:
+                mail_headers.append('To: %s <%s>' % (user.name, user.email))
+            else:
+                _logger.warn('%s does not have an email address', user.name)
         for entity in self.browse(cr, uid, ids, context=context):
             mail_subject = None
             entity_name = values.get('name') or entity.name
@@ -41,13 +46,16 @@ class ach(object):
                 action = 'set'
             elif all_equal(proposed.values(), lambda v: bool(v) is False):
                 action = 'clear'
+                # if this was a brand new record, no need to send email
+                if context.get('ach') == 'create':
+                    continue
             else:
                 raise ERPError('Information Missing', 'Either all the ACH fields must be filled out, or none of them')
             if action == 'clear':
                 values['ach_verified'] = False
                 values['ach_amount'] = False
                 values['ach_date'] = Date.today()
-                mail_subject = 'ACH data removed from %s' % entity_name)
+                mail_subject = 'ACH data removed from %s' % entity_name
             elif action == 'set':
                 if proposed.get('ach_type') == 'foreign':
                     raise ERPError('Not Implemented', 'Foreign ACH is not yet implemented.')
@@ -66,8 +74,8 @@ class ach(object):
                     # verification status changing
                     mail_subject = 'ACH status changed for %s' % entity_name
             if mail_subject is not None:
-                mail_headers = '\n'.join(mail_headers) + '\n' + mail_subject + '\n\n'
-                mail_body = 'name: %(name)s\nby:   %(user)s\nat:   %(date)\nfrom: %(ip)s'
+                mail_headers = '\n'.join(mail_headers) + '\nSubject: ' + mail_subject + '\n\n'
+                mail_body = 'name: %(name)s\nby:   %(user)s\nat:   %(date)s\nfrom: %(ip)s'
                 if 'ach_verified' in values:
                     if entity.ach_verified == values['ach_verified']:
                         # same value means a created record
