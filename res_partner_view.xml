@@ -23,11 +23,8 @@
                             <group>
                                 <label for="ach_verified" string="Status"/>
                                 <field name="ach_verified" widget="select" nolabel="1" readwrite="groups('automated_clearing_house.approve')"/>
-                                <separator colspan="2"/>
-                                <label for="ach_date" string="Last Transaction Date"/>
+                                <label for="ach_date" string="Last Status Change"/>
                                 <field name="ach_date" nolabel="1" attrs="{'readonly':True}"/>
-                                <label for="ach_amount" string="Last Transaction Amount"/>
-                                <field name="ach_amount" nolabel="1" attrs="{'readonly':True}"/>
                             </group>
                         </group>
                     </page>
