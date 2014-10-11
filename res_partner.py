@@ -16,8 +16,13 @@ class res_partner(ach, osv.Model):
         }
 
     def ach_users(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, SUPERUSER, [
-            '|',
-            ('groups_id.full_name','=','Automated Clearing House / Configure Partner Info'),
-            ('groups_id.full_name','=','Automated Clearing House / Approve Partner Info'),
-            ], context=context)
+        ach_users = []
+        for user in  self.pool.get('res.users').browse(cr, SUPERUSER, context=context):
+            for group in user.groups_id:
+                if group.full_name in (
+                        'Automated Clearing House / Configure Partner Info',
+                        'Automated Clearing House / Approve Partner Info',
+                        ):
+                    ach_users.append(user)
+                    break
+        return ach_users
