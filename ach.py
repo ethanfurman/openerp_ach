@@ -101,4 +101,3 @@ class ach(object):
         if ids:
             self.validate_ach(cr, uid, ids, values, context=context)
         return super(ach, self).write(cr, uid, ids, values, context=context)
-
