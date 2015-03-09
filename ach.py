@@ -26,9 +26,10 @@ class ach(object):
         # get info needed for email
         # - mail server to use from ir.mail_server, lowest numbered 'sequence'
         # - users to mail: all users with the appropriate 'configure' or 'approve' permissions
-        mail_server = min(self.pool.get('ir.mail_server').browse(cr, SUPERUSER), key=lambda ms: ms.sequence)
-        smtp_host = {'192.168.33.240':'westernstatesglass.com'}.get(mail_server.smtp_host, mail_server.smtp_host)
-        mail_headers = ['From: OpenERP <noreply@%s>' % smtp_host]
+        # mail_server = min(self.pool.get('ir.mail_server').browse(cr, SUPERUSER), key=lambda ms: ms.sequence)
+        # smtp_host = {'192.168.33.240':'westernstatesglass.com'}.get(mail_server.smtp_host, mail_server.smtp_host)
+        # mail_headers = ['From: OpenERP <noreply@%s>' % smtp_host]
+        mail_headers = []
         for user in self.ach_users(cr, uid, context=context):
             if user.email:
                 mail_headers.append('To: %s <%s>' % (user.name, user.email))
@@ -94,7 +95,7 @@ class ach(object):
                         'new_status': values.get('ach_verified', 'None')
                         }
                 mail_message = mail_headers + mail_body % mail_values
-                mail(mail_server.smtp_host, mail_server.smtp_port, mail_message)
+                mail(self, cr, uid, mail_message)
         return True
 
     def write(self, cr, uid, ids, values, context=None):
