@@ -9,10 +9,9 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <page string="Internal Notes" position="after">
-                    <page string="ACH" groups="automated_clearing_house.configure,automated_clearing_house.approve" attrs="{'invisible':[('employee','=',True)]}">
+                    <page string="ACH" groups="automated_clearing_house.configure,automated_clearing_house.approve">
                         <group>
                             <group>
-                                <field name="employee" invisible="1"/>
                                 <field name="ach_type" widget="select" readwrite="groups('automated_clearing_house.configure')"/>
                                 <separator colspan="2"/>
                                 <label for="ach_routing" string="Routing #"/>
