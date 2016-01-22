@@ -12,12 +12,14 @@ class ach(object):
 
     def create(self, cr, uid, values, context=None):
         new_id = super(ach, self).create(cr, uid, values, context=context)
-        ctx = context.copy()
+        ctx = context and context.copy() or {}
         ctx['ach'] = 'create'
         self.validate_ach(cr, uid, [new_id], values, context=ctx)
         return new_id
 
     def validate_ach(self, cr, uid, ids, values, context=None):
+        if context is None:
+            context = {}
         if not any([k[:4] == 'ach_' for k in values]):
             # if no ach changes, no need to continue
             return True

@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Automated Clearing House module
-# Copyright (C) 
+# Copyright (C)
 #    2013 Emile van Sebille.  All Rights Reserved.
 #
 # Automated Clearing House module is free software: you can redistribute

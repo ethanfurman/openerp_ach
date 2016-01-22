@@ -12,16 +12,16 @@
                     <page string="ACH" groups="automated_clearing_house.configure,automated_clearing_house.approve">
                         <group>
                             <group>
-                                <field name="ach_type" widget="select" readwrite="groups('automated_clearing_house.configure')"/>
+                                <field name="ach_type" widget="select" writeonly="groups('automated_clearing_house.configure')"/>
                                 <separator colspan="2"/>
                                 <label for="ach_routing" string="Routing #"/>
-                                <field name="ach_routing" nolabel="1" readwrite="groups('automated_clearing_house.configure')"/>
+                                <field name="ach_routing" nolabel="1" writeonly="groups('automated_clearing_house.configure')"/>
                                 <label for="ach_account" string="Account #"/>
-                                <field name="ach_account" nolabel="1" readwrite="groups('automated_clearing_house.configure')"/>
+                                <field name="ach_account" nolabel="1" writeonly="groups('automated_clearing_house.configure')"/>
                             </group>
                             <group>
                                 <label for="ach_verified" string="Status"/>
-                                <field name="ach_verified" widget="select" nolabel="1" readwrite="groups('automated_clearing_house.approve')"/>
+                                <field name="ach_verified" widget="select" nolabel="1" writeonly="groups('automated_clearing_house.approve')"/>
                                 <label for="ach_date" string="Last Status Change"/>
                                 <field name="ach_date" nolabel="1" attrs="{'readonly':True}"/>
                             </group>

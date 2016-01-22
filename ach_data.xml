@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="True">
-    
+
         <!-- ACH Bank account type -->
         <record model="res.partner.bank.type" id="bank_ach">
             <field name="name">ACH Bank Account</field>
