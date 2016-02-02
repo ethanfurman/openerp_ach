@@ -1,5 +1,5 @@
 from fnx import Date, DateTime, all_equal, finance
-from fnx.openerp import PropertyDict, mail
+from fnx.oe import PropertyDict, mail
 from osv.osv import except_osv as ERPError
 from openerp import SUPERUSER_ID as SUPERUSER
 import logging
