@@ -20,8 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from fnx.finance import ACHPayment
 
 class res_partner_bank(osv.osv):
     """Bank Accounts"""

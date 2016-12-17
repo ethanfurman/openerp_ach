@@ -1,7 +1,8 @@
-from fnx import Date, DateTime, all_equal, finance
-from fnx.oe import PropertyDict, mail
+from dbf import Date, DateTime
+from VSS import finance
+from VSS.utils import all_equal
+from fnx.oe import mail
 from osv.osv import except_osv as ERPError
-from openerp import SUPERUSER_ID as SUPERUSER
 import logging
 
 _logger = logging.getLogger(__name__)
