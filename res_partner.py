@@ -1,6 +1,6 @@
 from automated_clearing_house.ach import ach
 from openerp.osv import fields, osv
-from openerp import SUPERUSER_ID as SUPERUSER
+from openerp import SUPERUSER_ID
 
 class res_partner(ach, osv.Model):
     _name = 'res.partner'
@@ -15,9 +15,15 @@ class res_partner(ach, osv.Model):
         'ach_date': fields.date('Last Transaction'),
         }
 
+    # fields.apply_groups(
+    #         _columns,
+    #         {'automated_clearing_house.configure,automated_clearing_house.setup,automated_clearing_house.approve':
+    #             ['ach_.*']},
+    #         )
+
     def ach_users(self, cr, uid, context=None):
         ach_users = []
-        for user in  self.pool.get('res.users').browse(cr, SUPERUSER, context=context):
+        for user in  self.pool.get('res.users').browse(cr, SUPERUSER_ID, context=context):
             for group in user.groups_id:
                 if group.full_name in (
                         'Automated Clearing House / Configure Partner Info',
