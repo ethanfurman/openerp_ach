@@ -15,11 +15,11 @@ class res_partner(ach, osv.Model):
         'ach_date': fields.date('Last Transaction'),
         }
 
-    # fields.apply_groups(
-    #         _columns,
-    #         {'automated_clearing_house.configure,automated_clearing_house.setup,automated_clearing_house.approve':
-    #             ['ach_.*']},
-    #         )
+    fields.apply_groups(
+            _columns,
+            {'automated_clearing_house.configure,automated_clearing_house.setup,automated_clearing_house.approve':
+                ['ach_.*']},
+            )
 
     def ach_users(self, cr, uid, context=None):
         ach_users = []
